@@ -1,0 +1,8 @@
+services:
+  - docker
+
+script:
+  - cd ./combined
+  - docker build .
+  - cd ../postgis
+  - docker build .
