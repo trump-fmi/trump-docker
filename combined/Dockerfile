@@ -70,7 +70,7 @@ RUN GOPATH=/home/osm/go go build
 # pipeline
 WORKDIR /home/osm
 RUN wget https://download.geofabrik.de/europe/germany/baden-wuerttemberg-latest.osm.pbf
-RUN git clone --recursive https://github.com/krumpefp/label_pipeline.git
+RUN git clone --recursive https://github.com/trump-fmi/label_pipeline.git
 WORKDIR ./label_pipeline
 # modified pipeline conf with fixed font path
 COPY pipeline.conf ./config/example.conf
