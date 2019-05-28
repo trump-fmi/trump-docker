@@ -85,16 +85,15 @@ RUN rm -rf label_pipeline
 
 # frontend
 # TODO to move this to a separate container, CORS must be set by renderd. Setting it in apache helped load some, but not all tiles
-RUN git clone https://github.com/trump-fmi/ol-labels.git
-WORKDIR ./ol-labels
+RUN git clone https://github.com/trump-fmi/area-simplification-client.git
+WORKDIR ./area-simplification-client
 USER root
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
 RUN apt install -q -y nodejs
 RUN npm install
 RUN npm audit fix
 RUN npm run build
-RUN mv dist /var/www/html/
-COPY index.html /var/www/html/
+RUN mv dist index.html /var/www/html/
 RUN chown -R www-data: /var/www/html/
 
 
