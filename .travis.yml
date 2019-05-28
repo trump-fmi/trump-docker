@@ -2,7 +2,4 @@ services:
   - docker
 
 script:
-  - cd ./combined
-  - docker build .
-  - cd ../postgis
-  - docker build .
+  - docker-compose up --build
