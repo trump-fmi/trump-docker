@@ -4,7 +4,7 @@ LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-postgis"
 LABEL org.label-schema.description="PostgreSQL with postgis that imports OSM data with osm2pgsql"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd=" docker run -v ~/trump-data:/var/lib/postgresql/data --env-file=./env -t slothofanarchy/trump-postgis"
+LABEL org.label-schema.docker.cmd="docker run -id --name trump-postgis --network=trump -v trump-docker_data:/var/lib/postgresql/data --env-file=postgis/env -t slothofanarchy/trump-postgis"
 
 RUN apt update && apt install -y osm2pgsql wget 
 

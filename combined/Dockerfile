@@ -4,7 +4,7 @@ LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-combined"
 LABEL org.label-schema.description="OSM Mapnik tile server, dynamic label server, OpenLayers Frontend"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd="docker run -d slothofanarchy/trump-combined"
+LABEL org.label-schema.docker.cmd="docker run -itd --name trump-combined --network=trump --link trump-postgis -t slothofanarchy/trump-combined"
 
 
 ENV CARTO_VERSION 2.41.0

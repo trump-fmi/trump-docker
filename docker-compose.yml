@@ -1,0 +1,19 @@
+version: '3'
+services:
+  trump-postgis:
+    image: slothofanarchy/trump-postgis
+    build: ./postgis/
+    env_file:
+      - ./postgis/env
+    volumes:
+      - data:/var/lib/postgresql/data
+    restart: on-failure
+  trump-combined:
+    image: slothofanarchy/trump-combined
+    build: ./combined/
+    links:
+      - trump-postgis
+    tty: true
+    restart: on-failure
+volumes:
+  data: {}
