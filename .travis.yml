@@ -2,4 +2,4 @@ services:
   - docker
 
 script:
-  - travis_wait 120 docker-compose up --build
+  - docker-compose build

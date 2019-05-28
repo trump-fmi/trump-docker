@@ -1,4 +1,4 @@
-# trump-docker
+# trump-docker [![Build Status](https://travis-ci.org/trump-fmi/trump-docker.svg?branch=master)](https://travis-ci.org/trump-fmi/trump-docker)
 
 ## Container
 Es gibt folgende Container, zum Bauen jeweils in den Ordner gehen und dann `docker build -t slothofanarchy/trump-$(basename $PWD) .`.
