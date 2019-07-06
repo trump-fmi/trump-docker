@@ -7,9 +7,12 @@ LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
 LABEL org.label-schema.docker.cmd="docker run -itd --name trump-combined --network=trump --link trump-postgis -t slothofanarchy/trump-combined"
 
 
-ENV CARTO_VERSION 2.41.0
+ENV CARTO_VERSION 4.21.1
 
 
+RUN apt update && apt install -q -y apt-transport-https gnupg wget
+RUN echo "deb https://apt.kitware.com/ubuntu/ xenial main" > /etc/apt/sources.list.d/cmake.list
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
 RUN apt update && apt install -q -y \
 	# general
 	wget curl unzip git sudo dumb-init \
@@ -50,11 +53,15 @@ USER osm
 RUN wget https://github.com/gravitystorm/openstreetmap-carto/archive/v$CARTO_VERSION.tar.gz
 RUN tar xvf v$CARTO_VERSION.tar.gz
 WORKDIR ./openstreetmap-carto-$CARTO_VERSION
-# modified project.mml containing postgres host
-COPY --chown=osm:users carto-project.mml project.mml
-RUN ./get-shapefiles.sh
-RUN carto project.mml > style.xml
-
+# Don't place names
+RUN sed -i '/placenames.mss/d' project.mml
+# Set correct postgis host
+RUN sed -i '/Datasource:/a \ \ \ \ \ \ host: trump-postgis' project.mml
+RUN wget https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64
+RUN chmod +x ./yq_linux_amd64
+RUN ./yq_linux_amd64 read -j project.mml . > project.json
+RUN ./scripts/get-shapefiles.py
+RUN carto project.json > style.xml
 
 # label server
 # TODO to move label server and pipeline to another container, the API /labelCollection has to be configured to mention the tile server running on another host. Currently this is done by parsing the local renderd config

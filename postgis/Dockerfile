@@ -8,7 +8,7 @@ LABEL org.label-schema.docker.cmd="docker run -id --name trump-postgis --network
 
 RUN apt update && apt install -y osm2pgsql wget 
 
-ENV CARTO_VERSION 2.41.0
+ENV CARTO_VERSION 4.21.1
 WORKDIR /tmp
 RUN wget https://github.com/gravitystorm/openstreetmap-carto/archive/v$CARTO_VERSION.tar.gz
 RUN tar xvf v$CARTO_VERSION.tar.gz
