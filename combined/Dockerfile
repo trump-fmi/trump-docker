@@ -10,16 +10,19 @@ LABEL org.label-schema.docker.cmd="docker run -itd --name trump-combined --netwo
 ENV CARTO_VERSION 4.21.1
 
 
-RUN apt update && apt install -q -y apt-transport-https gnupg wget
+RUN apt update && apt install -q -y apt-transport-https gnupg wget curl
+# npm is needed for carto (mapnik style converter) and frontend
+RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
 RUN echo "deb https://apt.kitware.com/ubuntu/ xenial main" > /etc/apt/sources.list.d/cmake.list
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
 RUN apt update && apt install -q -y \
 	# general
 	wget curl unzip git sudo dumb-init \
 	# mapnik
-	libmapnik-dev apache2-dev gdal-bin node-carto mapnik-utils apache2 python-mapnik \
+	libmapnik-dev apache2-dev gdal-bin mapnik-utils apache2 python-mapnik nodejs\
 	# pipeline and labelserver
 	golang make cmake python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev fonts-dejavu
+RUN npm install -g carto
 
 
 # apache2 mod_tile module
@@ -57,11 +60,8 @@ WORKDIR ./openstreetmap-carto-$CARTO_VERSION
 RUN sed -i '/placenames.mss/d' project.mml
 # Set correct postgis host
 RUN sed -i '/Datasource:/a \ \ \ \ \ \ host: trump-postgis' project.mml
-RUN wget https://github.com/mikefarah/yq/releases/download/2.4.0/yq_linux_amd64
-RUN chmod +x ./yq_linux_amd64
-RUN ./yq_linux_amd64 read -j project.mml . > project.json
 RUN ./scripts/get-shapefiles.py
-RUN carto project.json > style.xml
+RUN carto project.mml > style.xml
 
 # label server
 # TODO to move label server and pipeline to another container, the API /labelCollection has to be configured to mention the tile server running on another host. Currently this is done by parsing the local renderd config
@@ -89,18 +89,15 @@ RUN rm /home/osm/baden-wuerttemberg-latest.osm.pbf
 WORKDIR /home/osm
 RUN rm -rf label_pipeline
 
-
 # frontend
 # TODO to move this to a separate container, CORS must be set by renderd. Setting it in apache helped load some, but not all tiles
 RUN git clone https://github.com/trump-fmi/area-simplification-client.git
 WORKDIR ./area-simplification-client
 USER root
-RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
-RUN apt install -q -y nodejs
 RUN npm install
 RUN npm audit fix
 RUN npm run build
-RUN mv dist index.html /var/www/html/
+RUN mv dist lib index.html /var/www/html/
 RUN chown -R www-data: /var/www/html/
 
 
