@@ -41,7 +41,7 @@ COPY ./apache-000-default.conf /etc/apache2/sites-enabled/000-default.conf
 # init.d config for renderd service. Runs under user osm and with copied config
 COPY renderd-service /etc/init.d/renderd
 # renderd config contains path to mapnik and mod_tile tile dir
-COPY ./renderd.conf /usr/local/etc/renderd.conf
+COPY ./renderd.conf /etc/renderd.conf
 RUN useradd -mg users -s /bin/bash osm
 # tile cache dir
 RUN mkdir -p /var/lib/mod_tile
