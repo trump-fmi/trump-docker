@@ -64,7 +64,7 @@ RUN ./scripts/get-shapefiles.py
 RUN carto project.mml > style.xml
 
 # label server
-# TODO to move label server and pipeline to another container, the API /labelCollection has to be configured to mention the tile server running on another host. Currently this is done by parsing the local renderd config
+# TODO to move label server and pipeline to another container, the API /labelCollection has to be configured to mention the tile server running on another host. Currently this is done by parsing the local renderd config, see Mapnik tile API
 WORKDIR /home/osm
 RUN mkdir /home/osm/go
 RUN git clone https://github.com/trump-fmi/osm_label_server.git
@@ -89,8 +89,15 @@ RUN rm /home/osm/baden-wuerttemberg-latest.osm.pbf
 WORKDIR /home/osm
 RUN rm -rf label_pipeline
 
+# Mapnik tile API
+RUN git clone https://github.com/trump-fmi/mapnik-tile-api.git
+WORKDIR ./mapnik-tile-api
+RUN GOPATH=/home/osm/go go get -u github.com/trump-fmi/mapnik-tile-api
+RUN GOPATH=/home/osm/go go build
+
 # frontend
 # TODO to move this to a separate container, CORS must be set by renderd. Setting it in apache helped load some, but not all tiles
+WORKDIR /home/osm
 RUN git clone https://github.com/trump-fmi/area-simplification-client.git
 WORKDIR ./area-simplification-client
 USER root
@@ -100,12 +107,11 @@ RUN npm run build
 RUN mv dist lib index.html /var/www/html/
 RUN chown -R www-data: /var/www/html/
 
-
 # remove build dependencies
 RUN apt purge -y libmapnik-dev apache2-dev gdal-bin node-carto make cmake python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev && apt autoremove -y
 
 COPY entrypoint.sh /usr/local/sbin/entrypoint.sh
-# 80 for tiles and frontend, 8080 for labels
-EXPOSE 80 8080
+# 80 for tiles and frontend, 8080 for labels, 8081 for tile endpoints
+EXPOSE 80 8080 8081
 ENTRYPOINT ["/usr/local/sbin/entrypoint.sh"]
 

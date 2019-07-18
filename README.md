@@ -22,9 +22,11 @@ Enthält mittlerweile folgendes:
 Hierfür wird die Verbindung zum postgres Server benötigt.
 Unter der URL sollte ein Bild laden, dann tut der Teil: http://172.17.0.3/osm_tiles/0/0/0.png
 
+#### Mapnik Tile API
+Diese parst die `renderd.conf` und listet vorhandene tile Endpoints als JSON unter `:8081`.
+
 #### Labelserver und Pipeline
-Die laufen ebenfalls hier, da sich in dem Projekt [die API `:8080/labelCollections`](http://172.17.0.3:8080/labelCollections) befindet, die beschreibt welche Endpoints vorhanden sind.
-Dort wird auch der Tileserver erwähnt und vom Client benutzt, aber nur wenn dieser lokal läuft, denn die Beschreibung wird aus der lokalen `renderd.conf` geholt und mit der eigenen IP advertised.
+Müssten nicht unbedingt hier laufen, sofern man CORS konfiguriert bekommt, siehe nächster Abschnitt.
 
 #### Frontend
 [Das Frontend](http://172.17.0.3) läuft auch hierin, da die Tiles sonst von einer anderen IP geladen würden, was durch die [Same-Origin-Policy](https://de.wikipedia.org/wiki/Same-Origin-Policy) verhindert wird.
