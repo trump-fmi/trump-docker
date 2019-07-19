@@ -8,22 +8,24 @@ LABEL org.label-schema.docker.cmd="docker run -itd --name trump-combined --netwo
 
 
 ENV CARTO_VERSION 4.21.1
-
+ENV CMAKE_VERSION 3.15.0
 
 RUN apt update && apt install -q -y apt-transport-https gnupg wget curl
 # npm is needed for carto (mapnik style converter) and frontend
-RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
-RUN echo "deb https://apt.kitware.com/ubuntu/ xenial main" > /etc/apt/sources.list.d/cmake.list
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt update && apt install -q -y \
 	# general
 	wget curl unzip git sudo dumb-init \
 	# mapnik
 	libmapnik-dev apache2-dev gdal-bin mapnik-utils apache2 python-mapnik nodejs\
 	# pipeline and labelserver
-	golang make cmake python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev fonts-dejavu
+	golang make python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev fonts-dejavu
 RUN npm install -g carto
-
+RUN wget https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.tar.gz
+RUN tar -xzf cmake-$CMAKE_VERSION.tar.gz
+WORKDIR cmake-$CMAKE_VERSION
+RUN ./bootstrap && make && make install
+WORKDIR /
 
 # apache2 mod_tile module
 RUN git clone https://github.com/openstreetmap/mod_tile.git
