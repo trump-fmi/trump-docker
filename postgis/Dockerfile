@@ -10,7 +10,7 @@ LABEL org.label-schema.docker.cmd="docker run -id --name trump-postgis --network
 ENV PYTHON_VERSION 3.7.3
 ENV CGAL_VERSION 4.13.1
 
-RUN apt update && apt install -y --no-install-recommends \
+RUN apt update && apt install -y \
     curl wget git osm2pgsql ca-certificates\
     # needed to build python 3.7.3
     build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev \
