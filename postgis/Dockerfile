@@ -14,6 +14,8 @@ RUN apt update && apt install -y \
     curl wget git osm2pgsql ca-certificates\
     # needed to build python 3.7.3
     build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev \
+    # needed to build CGAL
+    libgmp-dev libmpfr-dev libboost-system-dev libboost-thread-dev \
     # needed to run area-preprocessing
     libpq-dev osmctools \
     # needed to build topo_simplify
@@ -22,7 +24,7 @@ RUN apt update && apt install -y \
 # Install npm and osmtogeojson
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt update && apt install -y nodejs npm
-RUN npm install osmtogeojson
+RUN npm install -g osmtogeojson
 
 WORKDIR /tmp
 # python3 is needed for f strings
@@ -44,11 +46,10 @@ RUN cmake . && make -j4 && make install
 # Cleanup
 WORKDIR /tmp
 RUN rm -rf Python-$PYTHON_VERSION Python-$PYTHON_VERSION.tar.xz CGAL-$CGAL_VERSION CGAL-$CGAL_VERSION.tar.xz
-RUN apt purge -y build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev libpq-dev && apt autoremove -y
 
 # Entrypoint is set by postgres layers, it executes the scripts in /docker-entrypoint-initdb.d if the datadir does not exist
 COPY ./import-osm.sh /usr/local/bin/import-osm
-RUN ln -s /usr/local/bin/import-osm /docker-entrypoint-initdb.d/osm.sh
+RUN ln -s /usr/local/bin/import-osm /docker-entrypoint-initdb.d/osm-1.sh
 COPY ./update-areas.sh /usr/local/bin/update-areas
-RUN ln -s /usr/local/bin/update-areas /docker-entrypoint-initdb.d/osm-areas.sh
+RUN ln -s /usr/local/bin/update-areas /docker-entrypoint-initdb.d/osm-2-areas.sh
 COPY env /etc/environment
