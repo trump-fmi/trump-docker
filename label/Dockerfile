@@ -51,7 +51,7 @@ COPY pipeline.conf ./config/example.conf
 RUN ./install.sh
 WORKDIR ./bin
 RUN ./pipeline.sh ../config/example.conf /home/osm/input.osm.pbf
-RUN mv example_labeling.ce /home/osm/osm_label_server/labels.osm.pbf.ce
+RUN mv example_labeling.ce /home/osm/modular_osm_label_server/labels.osm.pbf.ce
 RUN rm /home/osm/input.osm.pbf
 WORKDIR /home/osm
 RUN rm -rf label_pipeline
