@@ -3,4 +3,4 @@ POSTGRES_USER=osm
 CARTO_VERSION=4.21.1
 OSM_INPUT_URL=https://download.geofabrik.de/europe/germany/baden-wuerttemberg/stuttgart-regbez-latest.osm.pbf
 OSM2PGSQL_CPU=4
-OSM2PGSQL_RAM=4000
+OSM2PGSQL_RAM=1000
