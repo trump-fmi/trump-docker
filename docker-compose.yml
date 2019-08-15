@@ -8,9 +8,30 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     restart: on-failure
-  trump-combined:
-    image: slothofanarchy/trump-combined
-    build: ./combined/
+  trump-mapnik:
+    image: slothofanarchy/trump-mapnik
+    build: ./mapnik/
+    links:
+      - trump-postgis
+    tty: true
+    restart: on-failure
+  trump-area:
+    image: slothofanarchy/trump-area
+    build: ./area/
+    links:
+      - trump-postgis
+    tty: true
+    restart: on-failure
+  trump-client:
+    image: slothofanarchy/trump-client
+    build: ./client/
+    links:
+      - trump-postgis
+    tty: true
+    restart: on-failure
+  trump-label:
+    image: slothofanarchy/trump-label
+    build: ./label/
     links:
       - trump-postgis
     tty: true
