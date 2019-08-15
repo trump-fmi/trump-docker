@@ -3,6 +3,9 @@
 # Fail immediately if one command fails
 set -e
 
+# Clean up left-over dirs
+rm -rf /tmp/area-types /tmp/area-preprocessing /tmp/topo_simplify
+
 # Clone our repos
 git clone https://github.com/trump-fmi/area-types.git /tmp/area-types
 git clone https://github.com/trump-fmi/area-preprocessing.git /tmp/area-preprocessing
@@ -13,11 +16,14 @@ mkdir /tmp/topo_simplify/XFREE/build /tmp/topo_simplify/CTR/build
 
 # Build xfree
 cd /tmp/topo_simplify/XFREE/build
-cmake .. && make && mv xfree /usr/local/bin/
+cmake .. && make
 
 # Build topo_simplify
 cd /tmp/topo_simplify/CTR/build
-cmake .. && make && mv topo_simplify /usr/local/bin/
+cmake .. && make
+
+# Download source data
+wget -O /tmp/source_data.osm.pbf "$OSM_INPUT_URL"
 
 # Run preprocessing (osm.pbf input file is downloaded by the other osm init script)
 cd /tmp/area-preprocessing
