@@ -15,48 +15,24 @@ RUN apt update && apt install -q -y apt-transport-https gnupg wget curl
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt update && apt install -q -y \
 	# general
-	wget curl unzip git sudo dumb-init \
+	wget curl git sudo \
 	# mapnik
 	libmapnik-dev apache2-dev gdal-bin mapnik-utils apache2 python-mapnik nodejs\
 	# pipeline and labelserver
 	golang make python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev fonts-dejavu
-RUN npm install -g carto
+
 RUN wget https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.tar.gz
 RUN tar -xzf cmake-$CMAKE_VERSION.tar.gz
 WORKDIR cmake-$CMAKE_VERSION
 RUN ./bootstrap && make && make install
 WORKDIR /
 
-# apache2 mod_tile module
-RUN git clone https://github.com/openstreetmap/mod_tile.git
-WORKDIR ./mod_tile
-RUN ./autogen.sh && ./configure && make && make install && make install-mod_tile
-WORKDIR /
-RUN rm -rf /mod_tile
-
 RUN useradd -mg users -s /bin/bash osm
-# tile cache dir
-RUN mkdir -p /var/lib/mod_tile
-RUN chown osm:users /var/lib/mod_tile
 
 # Fix for pipeline dependency
 RUN ln -s /usr/include/jsoncpp/json/ /usr/include/json
 
-# generate tile style that is used by renderd
-WORKDIR /home/osm
-USER osm
-RUN wget https://github.com/gravitystorm/openstreetmap-carto/archive/v$CARTO_VERSION.tar.gz
-RUN tar xvf v$CARTO_VERSION.tar.gz
-WORKDIR ./openstreetmap-carto-$CARTO_VERSION
-# Don't place names
-RUN sed -i '/placenames.mss/d' project.mml
-# Set correct postgis host
-RUN sed -i '/Datasource:/a \ \ \ \ \ \ host: trump-postgis' project.mml
-RUN ./scripts/get-shapefiles.py
-RUN carto project.mml > style.xml
-
 # label server
-# TODO to move label server and pipeline to another container, the API /labelCollection has to be configured to mention the tile server running on another host. Currently this is done by parsing the local renderd config, see Mapnik tile API
 WORKDIR /home/osm
 RUN mkdir /home/osm/go
 RUN git clone https://github.com/trump-fmi/osm_label_server.git
