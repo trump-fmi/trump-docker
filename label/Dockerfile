@@ -27,33 +27,32 @@ WORKDIR cmake-$CMAKE_VERSION
 RUN ./bootstrap && make && make install
 WORKDIR /
 
-RUN useradd -mg users -s /bin/bash osm
-
 # Fix for pipeline dependency
 RUN ln -s /usr/include/jsoncpp/json/ /usr/include/json
 
 # label server
+RUN useradd -mg users -s /bin/bash osm
 WORKDIR /home/osm
 RUN mkdir /home/osm/go
-RUN git clone https://github.com/trump-fmi/osm_label_server.git
-WORKDIR ./osm_label_server
+RUN git clone https://github.com/trump-fmi/modular_osm_label_server.git
+WORKDIR ./modular_osm_label_server
 # config contains name of pbf.ce file
 COPY --chown=osm:users labelserver-default.json default.json
-RUN GOPATH=/home/osm/go go get -u github.com/trump-fmi/osm_label_server
+RUN GOPATH=/home/osm/go go get -u github.com/trump-fmi/modular_osm_label_server
 RUN GOPATH=/home/osm/go go build
 
 # pipeline
 WORKDIR /home/osm
-RUN wget https://download.geofabrik.de/europe/germany/baden-wuerttemberg-latest.osm.pbf
-RUN git clone --recursive https://github.com/trump-fmi/label_pipeline.git
-WORKDIR ./label_pipeline
+RUN wget -O /home/osm/input.osm.pbf https://download.geofabrik.de/europe/germany/baden-wuerttemberg-latest.osm.pbf
+RUN git clone --recursive https://github.com/trump-fmi/label_pipeline.git /home/osm/label_pipeline
+WORKDIR /home/osm/label_pipeline
 # modified pipeline conf with fixed font path
 COPY pipeline.conf ./config/example.conf
 RUN ./install.sh
 WORKDIR ./bin
-RUN ./pipeline.sh ../config/example.conf /home/osm/baden-wuerttemberg-latest.osm.pbf
-RUN cp example_labeling.ce /home/osm/osm_label_server/baden-wuerttemberg-latest.osm.pbf.ce
-RUN rm /home/osm/baden-wuerttemberg-latest.osm.pbf
+RUN ./pipeline.sh ../config/example.conf /home/osm/input.osm.pbf
+RUN mv example_labeling.ce /home/osm/osm_label_server/labels.osm.pbf.ce
+RUN rm /home/osm/input.osm.pbf
 WORKDIR /home/osm
 RUN rm -rf label_pipeline
 
