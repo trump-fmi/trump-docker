@@ -11,7 +11,7 @@ ENV CARTO_VERSION 4.21.1
 
 RUN apt update && apt install --no-install-recommends -y \
 	# general
-	wget git sudo ca-certificates \
+	wget git sudo ca-certificates postgresql-client-11 \
 	# mapnik
 	libmapnik-dev apache2-dev apache2 npm mapnik-utils g++ \
 	# mapnik api
@@ -61,4 +61,3 @@ COPY entrypoint.sh /usr/local/sbin/entrypoint.sh
 # 80 for tiles and frontend, 8081 for tile endpoints
 EXPOSE 80 8081
 ENTRYPOINT ["/usr/local/sbin/entrypoint.sh"]
-

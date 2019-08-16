@@ -2,7 +2,17 @@
 
 # turn on bash's job control
 set -m
+
+# Fail when any command here fails
+set -e
 /usr/sbin/apachectl restart &
-/etc/init.d/renderd restart &
 sudo -u osm /home/osm/go/bin/mapnik-tile-api &
+
+
+until psql -h trump-postgis -U osm gis -c '\q'; do
+  >&2 echo "Postgres is unavailable - sleeping"
+  sleep 1
+done
+
+/etc/init.d/renderd restart &
 exec bash
