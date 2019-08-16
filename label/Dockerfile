@@ -33,6 +33,7 @@ RUN ln -s /usr/include/jsoncpp/json/ /usr/include/json
 # label server
 RUN useradd -mg users -s /bin/bash osm
 WORKDIR /home/osm
+USER osm
 RUN mkdir /home/osm/go
 RUN git clone https://github.com/trump-fmi/modular_osm_label_server.git
 WORKDIR ./modular_osm_label_server
