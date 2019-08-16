@@ -14,6 +14,8 @@ services:
     links:
       - trump-postgis
     tty: true
+    volumes:
+      - cache:/var/lib/mod_tile
     restart: on-failure
   trump-area:
     image: slothofanarchy/trump-area
@@ -22,19 +24,21 @@ services:
       - trump-postgis
     tty: true
     restart: on-failure
-  trump-client:
-    image: slothofanarchy/trump-client
-    build: ./client/
-    links:
-      - trump-postgis
-    tty: true
-    restart: on-failure
   trump-label:
     image: slothofanarchy/trump-label
     build: ./label/
-    links:
-      - trump-postgis
     tty: true
     restart: on-failure
+  trump-client:
+    image: slothofanarchy/trump-client
+    build: ./client/
+    tty: true
+    restart: on-failure
+    depends_on:
+      - trump-mapnik
+      - trump-area
+      - trump-label
+    ports:
+      - 80:80
 volumes:
   data: {}
