@@ -15,6 +15,6 @@ WORKDIR /tmp/area-simplification-client
 RUN npm install
 RUN npm audit fix
 RUN npm run build
-RUN mv dist lib index.html /usr/share/nginx/html
+RUN mv dist lib index.html config.json /usr/share/nginx/html
 RUN chown -R nginx: /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
