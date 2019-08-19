@@ -28,11 +28,11 @@ RUN echo "LoadModule tile_module /usr/lib/apache2/modules/mod_tile.so" > /etc/ap
 RUN ln -s /etc/apache2/mods-available/mod_tile.load /etc/apache2/mods-enabled/
 COPY ./apache-000-default.conf /etc/apache2/sites-enabled/000-default.conf
 
-# renderd service file (adapted version running as osm user)
-COPY renderd-service /etc/init.d/renderd
 RUN useradd -mg users -s /bin/bash osm
 # renderd config contains path to mapnik and mod_tile tile dir
 COPY --chown=osm:users ./renderd.conf /etc/renderd.conf
+# sock file needs to exist w/ permissions to start renderd directly as osm user
+RUN mkdir -p /var/run/renderd && chown -R osm: /var/run/renderd
 # tile cache dir
 RUN mkdir -p /var/lib/mod_tile
 RUN chown osm:users /var/lib/mod_tile

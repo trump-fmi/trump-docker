@@ -14,5 +14,5 @@ until psql -h trump-postgis -U osm gis -c '\q'; do
   sleep 1
 done
 
-/etc/init.d/renderd restart &
-exec bash
+# Directly run renderd in foreground mode
+exec sudo -u osm /usr/local/bin/renderd -f
