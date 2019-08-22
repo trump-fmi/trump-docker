@@ -40,6 +40,11 @@ services:
       - trump-label
     ports:
       - 80:80
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: --interval 30 --cleanup
 volumes:
   data: {} # postgis data
   cache: {} # mapnik tile cache
