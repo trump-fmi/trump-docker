@@ -4,7 +4,7 @@ LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-label"
 LABEL org.label-schema.description="OSM dynamic label API server (extracts labels from osm.pbf)"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd="docker run -itd --name trump-label --network=trump --link trump-postgis -t slothofanarchy/trump-label"
+LABEL org.label-schema.docker.cmd="docker run -itd --name trump-label --network=trump -v trump-docker_labels:/home/osm/labels --link trump-postgis -t slothofanarchy/trump-label"
 
 
 ENV CARTO_VERSION 4.21.1
@@ -47,22 +47,19 @@ WORKDIR /home/osm
 RUN wget -O /home/osm/input.osm.pbf https://download.geofabrik.de/europe/germany-latest.osm.pbf
 RUN git clone --recursive https://github.com/trump-fmi/label_pipeline.git /home/osm/label_pipeline
 WORKDIR /home/osm/label_pipeline
+RUN ./install.sh
 # modified pipeline conf with fixed font path
 COPY pipeline.conf ./config/example.conf
-RUN ./install.sh
-WORKDIR ./bin
-RUN ./pipeline.sh ../config/example.conf /home/osm/input.osm.pbf
-RUN mv example_labeling.ce /home/osm/modular_osm_label_server/labels.osm.pbf.ce
-RUN rm /home/osm/input.osm.pbf
-WORKDIR /home/osm
-RUN rm -rf label_pipeline
+# volume dir for labels, so that the pipeline is not ran at every start
+RUN mkdir /home/osm/labels
 
-USER root
 # remove build dependencies
+USER root
 RUN apt purge -y libmapnik-dev apache2-dev gdal-bin node-carto make cmake python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev && apt autoremove -y
 
 COPY entrypoint.sh /usr/local/sbin/entrypoint.sh
+COPY update-labels.sh /usr/local/bin/update-labels
+
 # 8080 for labels
 EXPOSE 8080
 ENTRYPOINT ["/usr/local/sbin/entrypoint.sh"]
-

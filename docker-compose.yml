@@ -28,6 +28,8 @@ services:
     image: slothofanarchy/trump-label
     build: ./label/
     tty: true
+    volumes:
+      - labels:/home/osm/labels
     restart: on-failure
   trump-client:
     image: slothofanarchy/trump-client
@@ -48,3 +50,4 @@ services:
 volumes:
   data: {} # postgis data
   cache: {} # mapnik tile cache
+  labels: {} # dir for label ce file
