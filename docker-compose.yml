@@ -42,20 +42,6 @@ services:
       - trump-label
     ports:
       - 80:80
-  ouroboros:
-    container_name: ouroboros
-    hostname: ouroboros
-    image: pyouroboros/ouroboros
-    environment:
-      - CLEANUP=true
-      - INTERVAL=30
-      - LOG_LEVEL=debug
-      - SELF_UPDATE=true
-      - TZ=Europe/Berlin
-      - LATEST=true
-    restart: unless-stopped
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   data: {} # postgis data
   cache: {} # mapnik tile cache
