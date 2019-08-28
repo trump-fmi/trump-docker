@@ -11,5 +11,5 @@ until psql -h trump-postgis -U osm gis -c '\q'; do
   sleep 1
 done
 
-sudo -u area ./server.py &
+sudo -u area python3 ./server.py &
 exec bash
