@@ -13,7 +13,7 @@ RUN apt update && apt install --no-install-recommends -y \
 	# general
 	wget git sudo ca-certificates postgresql-client-11 \
 	# mapnik
-	libmapnik-dev apache2-dev apache2 npm mapnik-utils g++ \
+	libmapnik-dev apache2-dev apache2 npm mapnik-utils g++ fonts-noto \
 	# mapnik api
 	golang
 
