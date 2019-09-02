@@ -1,4 +1,4 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-label"
@@ -8,7 +8,6 @@ LABEL org.label-schema.docker.cmd="docker run -itd --name trump-label --network=
 
 
 ENV CARTO_VERSION 4.21.1
-ENV CMAKE_VERSION 3.15.0
 
 RUN apt update && apt install -q -y apt-transport-https gnupg wget curl
 # npm is needed for carto (mapnik style converter) and frontend
@@ -16,16 +15,8 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt update && apt install -q -y \
 	# general
 	wget curl git sudo \
-	# mapnik
-	libmapnik-dev apache2-dev gdal-bin mapnik-utils apache2 python-mapnik nodejs\
 	# pipeline and labelserver
-	golang make python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev fonts-dejavu
-
-RUN wget https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.tar.gz
-RUN tar -xzf cmake-$CMAKE_VERSION.tar.gz
-WORKDIR cmake-$CMAKE_VERSION
-RUN ./bootstrap && make && make install
-WORKDIR /
+	golang cmake make python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev fonts-dejavu
 
 # Fix for pipeline dependency
 RUN ln -s /usr/include/jsoncpp/json/ /usr/include/json
@@ -44,7 +35,6 @@ RUN GOPATH=/home/osm/go go build
 
 # pipeline
 WORKDIR /home/osm
-RUN wget -O /home/osm/input.osm.pbf https://download.geofabrik.de/europe/germany-latest.osm.pbf
 RUN git clone --recursive https://github.com/trump-fmi/label_pipeline.git /home/osm/label_pipeline
 WORKDIR /home/osm/label_pipeline
 RUN ./install.sh
@@ -59,6 +49,8 @@ RUN apt purge -y libmapnik-dev apache2-dev gdal-bin node-carto make cmake python
 
 COPY entrypoint.sh /usr/local/sbin/entrypoint.sh
 COPY update-labels.sh /usr/local/bin/update-labels
+
+RUN /usr/local/bin/update-labels
 
 # 8080 for labels
 EXPOSE 8080

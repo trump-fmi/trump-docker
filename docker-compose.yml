@@ -27,6 +27,8 @@ services:
   trump-label:
     image: slothofanarchy/trump-label
     build: ./label/
+    env_file:
+      - ./postgis/env
     tty: true
     volumes:
       - labels:/home/osm/labels
