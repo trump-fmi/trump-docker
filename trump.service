@@ -1,0 +1,25 @@
+# /etc/systemd/system/trump.service
+
+[Unit]
+Description=Trump docker-compose service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+Group=docker
+WorkingDirectory=/opt/trump-docker
+# Pull from repo to get latest docker-compose.yml
+ExecStartPre=sudo -u stud git pull
+# Shutdown container (if running) when unit is stopped
+ExecStartPre=/usr/bin/docker-compose down
+# Pull latest container from Docker hub
+ExecStartPre=/usr/bin/docker-compose pull --include-deps
+# Start container when unit is started
+ExecStart=/usr/bin/docker-compose up
+# Stop container when unit is stopped
+ExecStop=/usr/bin/docker-compose down
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

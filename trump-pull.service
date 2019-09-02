@@ -1,0 +1,8 @@
+# /etc/systemd/system/trump-pull.service
+
+[Unit]
+Description=Periodically pull docker-compose images and restart if needed
+
+[Service]
+WorkingDirectory=/opt/trump-docker
+ExecStart=/opt/trump-docker/pull.sh

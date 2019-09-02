@@ -1,0 +1,10 @@
+# /etc/systemd/system/trump-pull.timer
+
+[Unit]
+Description=Timer for trump-pull
+
+[Timer]
+OnCalendar=minutely
+
+[Install]
+WantedBy=timers.target
