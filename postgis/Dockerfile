@@ -12,8 +12,6 @@ ENV CGAL_VERSION 4.13.1
 ENV CMAKE_VERSION 3.15.0
 ENV MPFR_VERSION 4.0.2
 
-https://www.mpfr.org/mpfr-current/mpfr-4.0.2.tar.xz
-
 RUN apt update && apt install -y \
     curl wget git osm2pgsql ca-certificates\
     # needed to build python 3.7.3
