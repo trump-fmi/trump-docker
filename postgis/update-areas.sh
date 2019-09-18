@@ -10,6 +10,7 @@ rm -rf /tmp/area-types /tmp/area-preprocessing /tmp/topo_simplify
 git clone https://github.com/trump-fmi/area-types.git /tmp/area-types
 git clone https://github.com/trump-fmi/area-preprocessing.git /tmp/area-preprocessing
 git clone https://github.com/trump-fmi/topo_simplify.git /tmp/topo_simplify
+git clone https://github.com/trump-fmi/area_labeling.git /tmp/area_labeling
 
 # Create build folders
 mkdir /tmp/topo_simplify/XFREE/build /tmp/topo_simplify/CTR/build
