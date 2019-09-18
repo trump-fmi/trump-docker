@@ -1,1 +1,2 @@
 OSM_INPUT_URL=https://download.geofabrik.de/europe/germany-latest.osm.pbf
+LABEL_CONFIG_URL=https://raw.githubusercontent.com/SlothOfAnarchy/label_pipeline/master/config/example.conf

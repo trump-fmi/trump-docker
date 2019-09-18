@@ -28,24 +28,20 @@ USER osm
 RUN mkdir /home/osm/go
 RUN git clone https://github.com/trump-fmi/modular_osm_label_server.git
 WORKDIR ./modular_osm_label_server
-# config contains name of pbf.ce file
-COPY --chown=osm:users labelserver-default.json default.json
+RUN echo '[{"name" : "citynames", "path" : "/home/osm/labels/labels.osm.pbf.ce"}]' > default.json
 RUN GOPATH=/home/osm/go go get -u github.com/trump-fmi/modular_osm_label_server
 RUN GOPATH=/home/osm/go go build
 
 # pipeline
-WORKDIR /home/osm
-RUN git clone --recursive https://github.com/trump-fmi/label_pipeline.git /home/osm/label_pipeline
+RUN git clone --recursive https://github.com/SlothOfAnarchy/label_pipeline.git /home/osm/label_pipeline
 WORKDIR /home/osm/label_pipeline
 RUN ./install.sh
-# modified pipeline conf with fixed font path
-COPY pipeline.conf ./config/example.conf
 # volume dir for labels, so that the pipeline is not ran at every start
 RUN mkdir /home/osm/labels
 
 # remove build dependencies
 USER root
-RUN apt purge -y libmapnik-dev apache2-dev gdal-bin node-carto make cmake python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev && apt autoremove -y
+RUN apt purge -y make cmake python libprotoc-dev libcppunit-dev && apt autoremove -y
 
 COPY entrypoint.sh /usr/local/sbin/entrypoint.sh
 COPY update-labels.sh /usr/local/bin/update-labels
