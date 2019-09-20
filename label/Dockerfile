@@ -16,10 +16,12 @@ RUN apt update && apt install -q -y \
 	# general
 	wget curl git sudo \
 	# pipeline and labelserver
-	golang cmake make python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev fonts-dejavu
+	golang cmake make python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev ttf-dejavu
 
-# Fix for pipeline dependency
-RUN ln -s /usr/include/jsoncpp/json/ /usr/include/json
+# Fixes for pipeline dependency
+RUN ln -s /usr/include/jsoncpp/json/ /usr/include/json && \
+	mkdir -p /usr/share/fonts/TTF/ && \
+	ln -s /usr/share/fonts/truetype/ttf-dejavu/DejaVuSans.ttf /usr/share/fonts/TTF/DejaVuSansMono.ttf
 
 # label server
 RUN useradd -mg users -s /bin/bash osm
@@ -33,7 +35,7 @@ RUN GOPATH=/home/osm/go go get -u github.com/trump-fmi/modular_osm_label_server
 RUN GOPATH=/home/osm/go go build
 
 # pipeline
-RUN git clone --recursive https://github.com/SlothOfAnarchy/label_pipeline.git /home/osm/label_pipeline
+RUN git clone --recursive https://github.com/krumpefp/label_pipeline.git /home/osm/label_pipeline
 WORKDIR /home/osm/label_pipeline
 RUN ./install.sh
 # volume dir for labels, so that the pipeline is not ran at every start
