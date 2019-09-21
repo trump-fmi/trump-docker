@@ -4,6 +4,7 @@ set -e
 psql -U "$POSTGRES_USER" -c "CREATE EXTENSION postgis;" -d "$POSTGRES_DB";
 psql -U "$POSTGRES_USER" -c "CREATE EXTENSION hstore;" -d "$POSTGRES_DB";
 
+cd /tmp
 # Download OSM source data
 wget -O source_data.osm.pbf "$OSM_INPUT_URL"
 
