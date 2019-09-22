@@ -1,4 +1,4 @@
-FROM postgres:11
+FROM mdillon/postgis:11
 
 LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-postgis"
@@ -6,25 +6,25 @@ LABEL org.label-schema.description="PostgreSQL with postgis that imports OSM dat
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
 LABEL org.label-schema.docker.cmd="docker run -id --name trump-postgis --network=trump -v trump-docker_data:/var/lib/postgresql/data --env-file=postgis/env -t slothofanarchy/trump-postgis"
 
-ENV POSTGIS_MAJOR 2.5
-ENV POSTGIS_VERSION 2.5.2+dfsg-1~exp1.pgdg90+1
-ENV CMAKE_VERSION 3.15.3
 
-RUN apt update \
-    && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
-    && apt install -y --no-install-recommends \
-        # postgis
-        postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR=$POSTGIS_VERSION \
-        postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR-scripts=$POSTGIS_VERSION \
-        postgis=$POSTGIS_VERSION \
-        # general
-        curl wget git osm2pgsql ca-certificates python3 python3-psycopg2 python3-jsonschema \
-        # needed to run area-preprocessing
-        libpq-dev osmctools \
-        # needed to build both black boxes
-        libcgal-dev libboost-dev g++ make \
-        # needed for label blackbox
-        pkg-config libnlopt-cxx-dev
+ENV PYTHON_VERSION 3.7.3
+ENV CGAL_VERSION 4.13.1
+ENV CMAKE_VERSION 3.15.0
+ENV MPFR_VERSION 4.0.2
+
+RUN apt update && apt install -y \
+    curl wget git osm2pgsql ca-certificates\
+    # needed to build python 3.7.3
+    build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libssl-dev libreadline-dev libffi-dev \
+    # needed to build CGAL
+    libgmp-dev libmpfr-dev libboost-system-dev libboost-thread-dev \
+    # needed to run area-preprocessing
+    libpq-dev osmctools \
+    # needed to build topo_simplify
+    libboost-dev g++ make \
+    # needed for label blackbox
+    libnlopt-dev 
+
 
 # Install npm and osmtogeojson
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
@@ -67,9 +67,6 @@ WORKDIR /tmp
 RUN rm -rf Python-$PYTHON_VERSION Python-$PYTHON_VERSION.tar.xz CGAL-$CGAL_VERSION CGAL-$CGAL_VERSION.tar.xz cmake-$CMAKE_VERSION cmake-$CMAKE_VERSION.tar.gz mpfr-$MPFR_VERSION mpfr-$MPFR_VERSION.tar.xz
 
 # Entrypoint is set by postgres layers, it executes the scripts in /docker-entrypoint-initdb.d if the datadir does not exist
-RUN mkdir -p /docker-entrypoint-initdb.d
-COPY ./initdb-postgis.sh /docker-entrypoint-initdb.d/postgis.sh
-COPY ./update-postgis.sh /usr/local/bin/update-postgis
 COPY ./import-osm.sh /usr/local/bin/import-osm
 RUN ln -s /usr/local/bin/import-osm /docker-entrypoint-initdb.d/osm-1.sh
 COPY ./update-areas.sh /usr/local/bin/update-areas

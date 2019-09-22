@@ -4,7 +4,7 @@
 set -e
 
 # Clean up left-over dirs
-rm -rf /tmp/area-types /tmp/area-preprocessing /tmp/topo_simplify /tmp/area_labeling
+rm -rf /tmp/area-types /tmp/area-preprocessing /tmp/topo_simplify
 
 # Clone our repos
 git clone https://github.com/trump-fmi/area-types.git /tmp/area-types
@@ -21,11 +21,6 @@ cmake .. && make
 
 # Build topo_simplify
 cd /tmp/topo_simplify/CTR/build
-cmake .. && make
-
-# Build area_labeling
-mkdir -p /tmp/area_labeling/standalone_lib/build
-cd /tmp/area_labeling/standalone_lib/build
 cmake .. && make
 
 # Download source data
