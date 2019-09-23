@@ -11,10 +11,10 @@ set -e
 # Download and import OSM source data if requested
 if [ "${IMPORT_OSM:-true}" = true ]; then
     # Download OSM source data
-    wget -O source_data.osm.pbf "$OSM_INPUT_URL"
+    wget --no-verbose -O source_data.osm.pbf "$OSM_INPUT_URL"
 
     # Load rendering style
-    wget "https://github.com/gravitystorm/openstreetmap-carto/archive/v$CARTO_VERSION.tar.gz"
+    wget --no-verbose "https://github.com/gravitystorm/openstreetmap-carto/archive/v$CARTO_VERSION.tar.gz"
     tar xvf "v$CARTO_VERSION.tar.gz"
 
     osm2pgsql --slim --drop --hstore --multi-geometry --keep-coastlines --unlogged --number-processes "$OSM2PGSQL_CPU" -C "$OSM2PGSQL_RAM" -H "$POSTGRES_HOST" -U "$POSTGRES_USER" -d "$POSTGRES_DB" -S "openstreetmap-carto-$CARTO_VERSION/openstreetmap-carto.style" source_data.osm.pbf
@@ -49,7 +49,7 @@ if [ "${RUN_PREPROCESSING:-true}" = true ]; then
     cmake .. && make
 
     # Download source data
-    wget -O /tmp/source_data.osm.pbf "$OSM_INPUT_URL"
+    wget --no-verbose -O /tmp/source_data.osm.pbf "$OSM_INPUT_URL"
 
     # Run preprocessing (osm.pbf input file is downloaded by the other osm init script)
     cd /tmp/area-preprocessing

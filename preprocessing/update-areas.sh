@@ -24,7 +24,7 @@ cd /tmp/topo_simplify/CTR/build
 cmake .. && make
 
 # Download source data
-wget -O /tmp/source_data.osm.pbf "$OSM_INPUT_URL"
+wget --no-verbose -O /tmp/source_data.osm.pbf "$OSM_INPUT_URL"
 
 # Run preprocessing (osm.pbf input file is downloaded by the other osm init script)
 cd /tmp/area-preprocessing

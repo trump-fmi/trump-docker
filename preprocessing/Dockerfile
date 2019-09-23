@@ -23,7 +23,7 @@ RUN npm install -g osmtogeojson
 
 # cmake on Debian Buster is too old to compile topo_simplify
 WORKDIR /tmp
-RUN wget https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.tar.gz
+RUN wget --no-verbose https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.tar.gz
 RUN tar -xzf cmake-$CMAKE_VERSION.tar.gz
 WORKDIR cmake-$CMAKE_VERSION
 RUN ./bootstrap && make && make install
