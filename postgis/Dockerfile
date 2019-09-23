@@ -8,7 +8,10 @@ LABEL org.label-schema.docker.cmd="docker run -id --name trump-postgis --network
 
 ENV POSTGIS_MAJOR 2.5
 ENV POSTGIS_VERSION 2.5.2+dfsg-1~exp1.pgdg90+1
-ENV CMAKE_VERSION 3.15.3
+ENV CMAKE_VERSION 3.15.0
+ENV MPFR_VERSION 4.0.2
+ENV PYTHON_VERSION 3.7.3
+ENV CGAL_VERSION 4.13.1
 
 RUN apt update \
     && apt-cache showpkg postgresql-$PG_MAJOR-postgis-$POSTGIS_MAJOR \
@@ -19,12 +22,14 @@ RUN apt update \
         postgis=$POSTGIS_VERSION \
         # general
         curl wget git osm2pgsql ca-certificates python3 python3-psycopg2 python3-jsonschema \
+		# needed to build python3
+		libffi-dev libssl-dev \
         # needed to run area-preprocessing
         libpq-dev osmctools \
         # needed to build both black boxes
         libcgal-dev libboost-dev g++ make \
         # needed for label blackbox
-        pkg-config libnlopt-cxx-dev
+        pkg-config libnlopt-dev
 
 # Install npm and osmtogeojson
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
@@ -66,7 +71,7 @@ RUN cmake . && make -j4 && make install
 WORKDIR /tmp
 RUN rm -rf Python-$PYTHON_VERSION Python-$PYTHON_VERSION.tar.xz CGAL-$CGAL_VERSION CGAL-$CGAL_VERSION.tar.xz cmake-$CMAKE_VERSION cmake-$CMAKE_VERSION.tar.gz mpfr-$MPFR_VERSION mpfr-$MPFR_VERSION.tar.xz
 
-# Entrypoint is set by postgres layers, it executes the scripts in /docker-entrypoint-initdb.d if the datadir does not exist
+# Entrypoint is set by postgres layers, it executes the scripts in /docker-entrypoint-initdb.d if the data dir does not exist
 RUN mkdir -p /docker-entrypoint-initdb.d
 COPY ./initdb-postgis.sh /docker-entrypoint-initdb.d/postgis.sh
 COPY ./update-postgis.sh /usr/local/bin/update-postgis
