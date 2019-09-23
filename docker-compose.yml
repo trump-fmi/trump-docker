@@ -1,8 +1,7 @@
 version: '3'
 services:
   trump-postgis:
-    image: slothofanarchy/trump-postgis
-    build: ./postgis/
+    image: mdillon/postgis:11
     env_file:
       - ./postgis/env
     volumes:

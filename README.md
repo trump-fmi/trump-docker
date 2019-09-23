@@ -7,18 +7,26 @@ This repository contains Docker images and a Docker compose file for the [TRUMP 
 All Images can be found on [Docker hub](https://hub.docker.com/u/slothofanarchy) so you can just start everything with `docker-compose up`.
 If you want to build the images by yourself, use `docker-compose up --build`.
 
-Some settings like the OSM download URL can be adapted by editing [postgis/env](postgis/env) as well as [label/env](env).
+Some settings like the OSM download URL can be adapted by editing [postgis/env](postgis/env), [label/env](label/env) or [preprocessing/env](preprocessing/env).
+
+docker-compose starts all images except for `trump-preprocessing`, which should only be run manually to update the database contents ([see below](#trump-preprocessing)).
 
 ## Images
 
-The project consists of five Images, some of them depending on each other.
+The project consists of six images, some of them depending on each other.
 
 ### trump-postgis
 
 This image runs a postgresql database with the postgis extension to store the OSM data for Mapnik and the area server.
 A volume is used to store the postgres data persistently.
-On the first startup, the container will download the OSM source file and import it using `osm2pgsql` as well as extract its borders and areas using [area-preprocessing](https://github.com/trump-fmi/area-preprocessing).
-These imports can also be ran manually later using `docker exec -it <container name or ID> import-osm` and `update-areas`, respectively.
+
+### trump-preprocessing
+
+This image is used to download and import OSM data into the postgres database as well as [preprocess](https://github.com/trump-fmi/area-preprocessing) data for the area Container.
+Dependencies for preprocessing will be compiled on each run.
+Assuming the docker-compose network with its containers is running, this container can be started using `docker run --network=trump-docker_default --env-file=./preprocessing/env -it slothofanarchy/trump-preprocessing:latest`.
+The [env file](preprocessing/env) for this Image contains the URL of the OSM source file (`OSM_INPUT_URL`) as well as flags to enable importing data and/or preprocessing data.
+The default is to only run preprocessing.
 
 ### trump-mapnik
 

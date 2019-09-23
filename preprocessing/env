@@ -1,0 +1,9 @@
+POSTGRES_HOST=trump-postgis
+POSTGRES_DB=gis
+POSTGRES_USER=osm
+CARTO_VERSION=4.21.1
+OSM_INPUT_URL=https://download.geofabrik.de/europe/germany/baden-wuerttemberg-latest.osm.pbf
+OSM2PGSQL_CPU=4
+OSM2PGSQL_RAM=1000
+IMPORT_OSM=false
+RUN_PREPROCESSING=true
