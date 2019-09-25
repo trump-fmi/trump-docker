@@ -5,4 +5,5 @@ Description=Periodically pull docker-compose images and restart if needed
 
 [Service]
 WorkingDirectory=/opt/trump-docker
+ExecStartPre=/usr/bin/docker pull slothofanarchy/trump-preprocessing:latest
 ExecStart=/opt/trump-docker/pull.sh

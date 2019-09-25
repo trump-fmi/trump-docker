@@ -11,6 +11,8 @@ Group=docker
 WorkingDirectory=/opt/trump-docker
 # Pull from repo to get latest docker-compose.yml
 ExecStartPre=sudo -u stud git pull
+# Pull trump-preprocessing as it is not contained in docker-compose
+ExecStartPre=/usr/bin/docker pull slothofanarchy/trump-preprocessing:latest
 # Shutdown container (if running) when unit is stopped
 ExecStartPre=/usr/bin/docker-compose down
 # Pull latest container from Docker hub
