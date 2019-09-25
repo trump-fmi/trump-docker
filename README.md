@@ -11,6 +11,10 @@ Some containers can be configured by editing the respective `env` file in its fo
 
 docker-compose starts all images except for `trump-preprocessing`, which should only be run manually to update the database contents ([see below](#trump-preprocessing)).
 
+## Architecture
+
+![architecture.png](architecture.png)
+
 ## Images
 
 The project consists of six images, some of them depending on each other.
