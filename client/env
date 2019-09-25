@@ -1,0 +1,4 @@
+TRUMP_MAPNIK_API_URI=http://trump-mapnik:8081
+TRUMP_MAPNIK_URI=http://trump-mapnik
+TRUMP_LABEL_URI=http://trump-label:8080
+TRUMP_AREA_URI=http://trump-area:8181

@@ -37,6 +37,8 @@ services:
     build: ./client/
     tty: true
     restart: on-failure
+    env_file:
+      - ./client/env
     depends_on:
       - trump-mapnik
       - trump-area

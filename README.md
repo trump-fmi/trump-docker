@@ -7,7 +7,7 @@ This repository contains Docker images and a Docker compose file for the [TRUMP 
 All Images can be found on [Docker hub](https://hub.docker.com/u/slothofanarchy) so you can just start everything with `docker-compose up`.
 If you want to build the images by yourself, use `docker-compose up --build`.
 
-Some settings like the OSM download URL can be adapted by editing [postgis/env](postgis/env), [label/env](label/env) or [preprocessing/env](preprocessing/env).
+Some containers can be configured by editing the respective `env` file in its folder.
 
 docker-compose starts all images except for `trump-preprocessing`, which should only be run manually to update the database contents ([see below](#trump-preprocessing)).
 
@@ -48,6 +48,7 @@ The [area-types](https://github.com/trump-fmi/area-types) repository is included
 ### trump-client
 
 This image serves the [area-simplification-client](https://github.com/trump-fmi/area-simplification-client) via nginx and acts as an reverse proxy to the APIs of other containers.
+In its [env file](client/env), the URIs for the reverse proxied upstreams can be configured, defaulting to the APIs provided by the other containers.
 
 ## systemd
 

@@ -4,9 +4,11 @@ LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-client"
 LABEL org.label-schema.description="OpenLayers Frontend with dynamic borders and labels"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd="docker run -itd --name trump-client --network=trump -t slothofanarchy/trump-client"
+LABEL org.label-schema.docker.cmd="docker run -itd --name trump-client --network=trump --env-file=./client/env -t slothofanarchy/trump-client"
 
-RUN apt update && apt install -q -y apt-transport-https gnupg wget curl
+RUN apt update \
+  && apt install -q -y \
+    apt-transport-https gnupg wget curl gettext-base
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN apt update && apt install -q -y git nodejs
 
@@ -18,3 +20,5 @@ RUN npm run build
 RUN mv dist lib index.html config.json /usr/share/nginx/html
 RUN chown -R nginx: /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
+COPY entrypoint.sh /usr/local/sbin/entrypoint.sh
+ENTRYPOINT ["/usr/local/sbin/entrypoint.sh"]
