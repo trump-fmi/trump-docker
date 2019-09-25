@@ -7,10 +7,14 @@ LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
 LABEL org.label-schema.docker.cmd="docker run -itd --name trump-client --network=trump --env-file=./client/env -t slothofanarchy/trump-client"
 
 RUN apt update \
-  && apt install -q -y \
-    apt-transport-https gnupg wget curl gettext-base
+  && apt install -q -y --no-install-recommends \
+    apt-transport-https ca-certificates gnupg wget curl gettext-base \
+  && apt autoremove -y \
+  && apt clean \
+  && rm -rf rm -rf /var/lib/apt/lists/*
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
-RUN apt update && apt install -q -y git nodejs
+RUN apt update \
+  && apt install -q -y --no-install-recommends git nodejs
 
 RUN git clone https://github.com/trump-fmi/area-simplification-client.git /tmp/area-simplification-client
 WORKDIR /tmp/area-simplification-client
