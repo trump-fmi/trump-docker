@@ -19,8 +19,7 @@ RUN apt update && apt install -y -q \
 
 # Install area-preprosessing module dependencies
 RUN pip3 install psycopg2 jsonschema
-RUN npm install -g osmtogeojson
-RUN npm install -g reproject
+RUN npm install -g osmtogeojson reproject
 
 # cmake on Debian Buster is too old to compile topo_simplify
 WORKDIR /tmp
