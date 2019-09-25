@@ -54,8 +54,9 @@ WORKDIR /home/osm/openstreetmap-carto-$CARTO_VERSION
 # Don't place names, set correct postgis host
 RUN sed -i '/placenames.mss/d' project.mml \
   && sed -i '/Datasource:/a \ \ \ \ \ \ host: trump-postgis' project.mml
-RUN ./scripts/get-shapefiles.py 
-RUN carto project.mml > style.xml
+RUN ./scripts/get-shapefiles.py \
+ && carto project.mml > style.xml \
+ && rm -rf data
 
 # Mapnik tile API
 RUN git clone https://github.com/trump-fmi/mapnik-tile-api.git
