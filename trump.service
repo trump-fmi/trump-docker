@@ -9,6 +9,8 @@ After=docker.service
 Restart=always
 Group=docker
 WorkingDirectory=/opt/trump-docker
+# Stop manually started preprocessing container
+ExecStartPre=/bin/bash -c 'docker ps | grep "slothofanarchy/trump-preprocessing" | cut -d" " -f 1 | xargs -n 1 docker stop || true'
 # Pull from repo to get latest docker-compose.yml
 ExecStartPre=sudo -u stud git pull
 # Pull trump-preprocessing as it is not contained in docker-compose
