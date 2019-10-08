@@ -2,9 +2,9 @@ FROM nginx:latest
 
 LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-client"
-LABEL org.label-schema.description="OpenLayers Frontend with dynamic borders and labels"
+LABEL org.label-schema.description="OpenLayers Frontend with dynamic borders and labels; proxy for the respective servers"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd="docker run -itd --name trump-client --network=trump --env-file=./client/env -t slothofanarchy/trump-client"
+LABEL org.label-schema.docker.cmd="docker run --name trump-client --network=trump-docker_default --env-file=./client/env -itd slothofanarchy/trump-client"
 
 RUN apt update \
   && apt install -q -y --no-install-recommends \

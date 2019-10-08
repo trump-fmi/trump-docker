@@ -4,7 +4,7 @@ LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-label"
 LABEL org.label-schema.description="OSM dynamic label API server (extracts labels from osm.pbf)"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd="docker run -itd --name trump-label --network=trump -v trump-docker_labels:/home/osm/labels --env-file=./label/env -t slothofanarchy/trump-label"
+LABEL org.label-schema.docker.cmd="docker run --name trump-label --network=trump-docker_default -v trump-docker_labels:/home/osm/labels --env-file=./label/env -itd slothofanarchy/trump-label"
 
 
 RUN apt update \

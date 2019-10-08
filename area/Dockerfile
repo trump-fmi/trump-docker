@@ -2,9 +2,9 @@ FROM debian:buster-slim
 
 LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-area"
-LABEL org.label-schema.description="Python API to serve OSM borders from postgis"
+LABEL org.label-schema.description="Python API to serve OSM borders and bended labels from postgis"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd="docker run -itd --name trump-area --network=trump --env-file=./area/env --link trump-postgis -t slothofanarchy/trump-area"
+LABEL org.label-schema.docker.cmd="docker run --name trump-area --network=trump-docker_default --env-file=./area/env -itd slothofanarchy/trump-area"
 
 RUN apt update \
   && apt install -y -q --no-install-recommends python3 git sudo python3-psycopg2 python3-jsonschema ca-certificates postgresql-client-11 \

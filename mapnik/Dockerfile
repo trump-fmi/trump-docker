@@ -4,7 +4,7 @@ LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-mapnik"
 LABEL org.label-schema.description="OSM Mapnik tile server with carto style rendering"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd="docker run -itd --name trump-mapnik --network=trump --env-file=./mapnik/env --link trump-postgis -t slothofanarchy/trump-mapnik"
+LABEL org.label-schema.docker.cmd="docker run --name trump-mapnik --network=trump-docker_default -v trump-docker_cache:/var/lib/mod_tile --env-file=./mapnik/env -itd slothofanarchy/trump-mapnik"
 
 
 ENV CARTO_VERSION 4.23.0
