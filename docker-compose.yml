@@ -10,6 +10,8 @@ services:
   trump-mapnik:
     image: slothofanarchy/trump-mapnik
     build: ./mapnik/
+    env_file:
+      - ./mapnik/env
     links:
       - trump-postgis
     tty: true
@@ -19,6 +21,8 @@ services:
   trump-area:
     image: slothofanarchy/trump-area
     build: ./area/
+    env_file:
+      - ./area/env
     links:
       - trump-postgis
     tty: true

@@ -4,10 +4,11 @@ LABEL maintainer="slothofanarchy1@gmail.com"
 LABEL org.label-schema.name="slothofanarchy/trump-mapnik"
 LABEL org.label-schema.description="OSM Mapnik tile server with carto style rendering"
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
-LABEL org.label-schema.docker.cmd="docker run -itd --name trump-mapnik --network=trump --link trump-postgis -t slothofanarchy/trump-mapnik"
+LABEL org.label-schema.docker.cmd="docker run -itd --name trump-mapnik --network=trump --env-file=./mapnik/env --link trump-postgis -t slothofanarchy/trump-mapnik"
 
 
 ENV CARTO_VERSION 4.21.1
+ENV POSTGRES_PASSWORD nieVooghee9fioSheicaizeiQueeyi2KaCh7boh2lei7xoo9CohtaeTe3mum
 
 RUN apt update \
   && apt install -y -q --no-install-recommends \
@@ -53,7 +54,8 @@ RUN git clone -b v$CARTO_VERSION https://github.com/gravitystorm/openstreetmap-c
 WORKDIR /home/osm/openstreetmap-carto-$CARTO_VERSION
 # Don't place names, set correct postgis host
 RUN sed -i '/placenames.mss/d' project.mml \
-  && sed -i '/Datasource:/a \ \ \ \ \ \ host: trump-postgis' project.mml
+  && sed -i '/Datasource:/a \ \ \ \ \ \ host: trump-postgis' project.mml \
+  && sed -i "/Datasource:/a \ \ \ \ \ \ password: $POSTGRES_PASSWORD" project.mml
 RUN ./scripts/get-shapefiles.py \
  && carto project.mml > style.xml \
  && rm -rf data
