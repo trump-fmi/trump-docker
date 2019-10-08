@@ -7,7 +7,7 @@ LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
 LABEL org.label-schema.docker.cmd="docker run -itd --name trump-mapnik --network=trump --env-file=./mapnik/env --link trump-postgis -t slothofanarchy/trump-mapnik"
 
 
-ENV CARTO_VERSION 4.21.1
+ENV CARTO_VERSION 4.23.0
 ENV POSTGRES_PASSWORD nieVooghee9fioSheicaizeiQueeyi2KaCh7boh2lei7xoo9CohtaeTe3mum
 
 RUN apt update \
@@ -54,6 +54,7 @@ RUN git clone -b v$CARTO_VERSION https://github.com/gravitystorm/openstreetmap-c
 WORKDIR /home/osm/openstreetmap-carto-$CARTO_VERSION
 # Don't place names, set correct postgis host
 RUN sed -i '/placenames.mss/d' project.mml \
+  && sed -i '/text-fill: @placenames;/d;/text-fill: @placenames-light;/d' amenity-points.mss \
   && sed -i '/Datasource:/a \ \ \ \ \ \ host: trump-postgis' project.mml \
   && sed -i "/Datasource:/a \ \ \ \ \ \ password: $POSTGRES_PASSWORD" project.mml
 RUN ./scripts/get-shapefiles.py \

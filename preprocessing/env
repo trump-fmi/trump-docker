@@ -3,7 +3,7 @@ POSTGRES_DB=gis
 POSTGRES_USER=osm
 # Directly used by osm2pgsql
 PGPASS=nieVooghee9fioSheicaizeiQueeyi2KaCh7boh2lei7xoo9CohtaeTe3mum
-CARTO_VERSION=4.21.1
+CARTO_VERSION=4.23.0
 OSM_INPUT_URL=https://download.geofabrik.de/europe/germany/baden-wuerttemberg-latest.osm.pbf
 OSM2PGSQL_CPU=4
 OSM2PGSQL_RAM=1000
