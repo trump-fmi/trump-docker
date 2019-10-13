@@ -27,9 +27,9 @@ RUN git clone https://github.com/openstreetmap/mod_tile.git /tmp/mod_tile
 WORKDIR /tmp/mod_tile
 RUN ./autogen.sh \
   && ./configure \
-  && make -j4 \
-  && make -j4 install \
-  && make -j4 install-mod_tile \
+  && make -j$(nproc) \
+  && make -j$(nproc) install \
+  && make -j$(nproc) install-mod_tile \
   && rm -rf /tmp/mod_tile
 
 # apache mapnik config

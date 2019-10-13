@@ -30,8 +30,8 @@ RUN wget --no-verbose https://github.com/Kitware/CMake/releases/download/v$CMAKE
 RUN tar -xzf cmake-$CMAKE_VERSION.tar.gz
 WORKDIR cmake-$CMAKE_VERSION
 RUN ./bootstrap \
-  && make \
-  && make install \
+  && make -j$(nproc) \
+  && make install -j$(nproc) \
   && rm -rf cmake-$CMAKE_VERSION cmake-$CMAKE_VERSION.tar.gz
 
 WORKDIR /tmp

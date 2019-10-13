@@ -38,15 +38,15 @@ if [ "${RUN_PREPROCESSING:-true}" = true ]; then
 
     # Build xfree
     cd /tmp/topo_simplify/XFREE/build
-    cmake .. && make
+	cmake .. && make -j$(nproc)
 
     # Build topo_simplify
     cd /tmp/topo_simplify/CTR/build
-    cmake .. && make
+	cmake .. && make -j$(nproc)
 
     # Build area_labeling
     cd /tmp/area_labeling/standalone_lib/build
-    cmake .. && make
+	cmake .. && make -j$(nproc)
 
     # Download source data
     wget --no-verbose -O /tmp/source_data.osm.pbf "$OSM_INPUT_URL"
