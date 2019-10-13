@@ -12,7 +12,7 @@ RUN apt update \
   && apt install -y -q --no-install-recommends \
     curl wget git osm2pgsql ca-certificates make g++ \
     # needed to run area-preprocessing
-    libpq-dev osmctools npm python3 python3-pip python3-setuptools \
+    libpq-dev osmctools npm python3 python3-setuptools python3-psutil python3-psycopg2 python3-jsonschema \
     # needed to build topo_simplify
     libboost-dev libcgal-dev \
     # needed for label blackbox
@@ -22,7 +22,6 @@ RUN apt update \
   && rm -rf rm -rf /var/lib/apt/lists/*
 
 # Install area-preprosessing module dependencies
-RUN pip3 install psycopg2-binary jsonschema
 RUN npm install -g osmtogeojson reproject
 
 # cmake on Debian Buster is too old to compile topo_simplify
