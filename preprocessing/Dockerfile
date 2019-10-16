@@ -6,8 +6,6 @@ LABEL org.label-schema.description="Image that connects to postgis container and
 LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
 LABEL org.label-schema.docker.cmd="docker run --network=trump-docker_default --env-file=./preprocessing/env -it slothofanarchy/trump-preprocessing:latest"
 
-ENV CMAKE_VERSION 3.15.3
-
 RUN apt update \
   && apt install -y -q --no-install-recommends \
     curl wget git osm2pgsql ca-certificates make g++ \
@@ -16,23 +14,13 @@ RUN apt update \
     # needed to build topo_simplify
     libboost-dev libcgal-dev \
     # needed for label blackbox
-    libnlopt-dev pkg-config libnlopt-cxx-dev \
+    cmake libnlopt-dev pkg-config libnlopt-cxx-dev \
   && apt autoremove -y \
   && apt clean \
   && rm -rf rm -rf /var/lib/apt/lists/*
 
 # Install area-preprosessing module dependencies
 RUN npm install -g osmtogeojson reproject
-
-# cmake on Debian Buster is too old to compile topo_simplify
-WORKDIR /tmp
-RUN wget --no-verbose https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/cmake-$CMAKE_VERSION.tar.gz
-RUN tar -xzf cmake-$CMAKE_VERSION.tar.gz
-WORKDIR cmake-$CMAKE_VERSION
-RUN ./bootstrap \
-  && make -j$(nproc) \
-  && make install -j$(nproc) \
-  && rm -rf cmake-$CMAKE_VERSION cmake-$CMAKE_VERSION.tar.gz
 
 WORKDIR /tmp
 
