@@ -7,7 +7,7 @@ LABEL org.label-schema.vcs-url="https://github.com/trump-fmi/trump-docker"
 LABEL org.label-schema.docker.cmd="docker run --name trump-area --network=trump-docker_default --env-file=./area/env -itd slothofanarchy/trump-area"
 
 RUN apt update \
-  && apt install -y -q --no-install-recommends python3 git sudo python3-psycopg2 python3-jsonschema ca-certificates postgresql-client-11 \
+  && apt install -y -q --no-install-recommends python3 git sudo python3-psycopg2 python3-jsonschema python3-aiohttp ca-certificates postgresql-client-11 \
   && apt autoremove -y \
   && apt clean \
   && rm -rf rm -rf /var/lib/apt/lists/*
