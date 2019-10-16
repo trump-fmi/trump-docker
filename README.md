@@ -4,7 +4,7 @@ This repository contains Docker images and a Docker compose file for the [TRUMP 
 
 ## docker-compose
 
-All Images can be found on [Docker hub](https://hub.docker.com/u/slothofanarchy) so you can just start everything with `docker-compose up`.
+All Images can be found on [Docker hub](https://hub.docker.com/u/slothofanarchy) so you can just pull them with `docker-compose pull` and start everything with `docker-compose up`.
 If you want to build the images by yourself, use `docker-compose up --build`.
 
 Some containers can be configured by editing the respective `env` file in its folder.

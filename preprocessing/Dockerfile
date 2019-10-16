@@ -12,7 +12,7 @@ RUN apt update \
   && apt install -y -q --no-install-recommends \
     curl wget git osm2pgsql ca-certificates make g++ \
     # needed to run area-preprocessing
-    libpq-dev osmctools npm python3 python3-setuptools python3-psutil python3-psycopg2 python3-jsonschema \
+    libpq-dev osmctools npm python3 python3-setuptools python3-psutil python3-psycopg2 python3-jsonschema python3-numpy \
     # needed to build topo_simplify
     libboost-dev libcgal-dev \
     # needed for label blackbox
