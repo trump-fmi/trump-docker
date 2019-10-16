@@ -60,6 +60,7 @@ RUN sed -i '/placenames.mss/d' project.mml \
 RUN ./scripts/get-shapefiles.py \
  && carto project.mml > style.xml \
  && rm -rf data
+ && ln -s /home/osm/openstreetmap-carto-$CARTO_VERSION/style.xml /home/osm/current-style.xml
 
 # Mapnik tile API
 RUN git clone https://github.com/trump-fmi/mapnik-tile-api.git
