@@ -20,7 +20,7 @@ RUN apt update \
     # general
     wget curl git sudo \
     # pipeline and labelserver
-    golang gcc python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev ttf-dejavu \
+    golang g++ make cmake python libcairo2-dev protobuf-compiler libprotoc-dev libcgal-dev libcppunit-dev libjsoncpp-dev ttf-dejavu \
   && apt autoremove -y \
   && apt clean \
   && rm -rf rm -rf /var/lib/apt/lists/*
@@ -50,7 +50,7 @@ RUN mkdir /home/osm/labels
 
 # remove build dependencies
 USER root
-RUN apt purge -y python gcc libprotoc-dev libcppunit-dev \
+RUN apt purge -y python g++ make cmake libprotoc-dev libcppunit-dev \
   && apt autoremove -y \
   && apt clean \
   && rm -rf rm -rf /var/lib/apt/lists/*
